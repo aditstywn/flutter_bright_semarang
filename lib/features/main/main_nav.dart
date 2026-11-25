@@ -16,12 +16,7 @@ class _MainNavState extends State<MainNav> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    const Center(
-      child: Text(
-        'History',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    ),
+
     const Center(
       child: Text(
         'Profile',
@@ -72,7 +67,7 @@ class _MainNavState extends State<MainNav> {
                 backgroundColor: ColorsApp.white,
                 showUnselectedLabels: true,
                 showSelectedLabels: true,
-                selectedItemColor: ColorsApp.button,
+                selectedItemColor: ColorsApp.primary,
                 unselectedItemColor: ColorsApp.grey,
                 selectedLabelStyle: const TextStyle(
                   fontSize: 11,
@@ -90,12 +85,6 @@ class _MainNavState extends State<MainNav> {
                     icon: const Icon(Icons.home_outlined, size: 23),
                     activeIcon: const Icon(Icons.home, size: 23),
                     label: 'Home',
-                  ),
-
-                  BottomNavigationBarItem(
-                    icon: const Icon(Icons.history_outlined, size: 23),
-                    activeIcon: const Icon(Icons.history, size: 23),
-                    label: 'History',
                   ),
 
                   BottomNavigationBarItem(
