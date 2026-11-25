@@ -13,6 +13,7 @@ import '../../auth/data/datasource/auth_local_datasource.dart';
 import '../../auth/data/models/response/login_response_model.dart';
 import '../../auth/presentation/pages/login_page.dart';
 import '../../presence/presentation/pages/camera_page.dart';
+import '../../presence/presentation/pages/history_presence_page.dart';
 import 'bloc/home_bloc.dart';
 import 'widgets/attendance_trend_card.dart';
 import 'widgets/daily_attendance_card.dart';
@@ -270,8 +271,9 @@ class _HomePageState extends State<HomePage> {
                                     _showFeedback('Membuka Pengajuan Izin'),
                                 onMyTasksTap: () =>
                                     _showFeedback('Membuka Tugas Saya'),
-                                onAttendanceHistoryTap: () =>
-                                    _showFeedback('Membuka Riwayat Presensi'),
+                                onPresenceHistoryTap: () {
+                                  context.push(const HistoryPresencePage());
+                                },
                               ),
                               const SizedBox(height: 18),
 

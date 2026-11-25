@@ -16,7 +16,7 @@ class BrightTheme {
 
   static AppBarTheme get _appBarTheme {
     return AppBarTheme(
-      backgroundColor: ColorsApp.primary.withAlpha(200),
+      backgroundColor: ColorsApp.primary,
       foregroundColor: ColorsApp.white,
       titleTextStyle: TextStyle(
         fontSize: 18,

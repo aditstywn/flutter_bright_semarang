@@ -7,6 +7,9 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/home/data/datasource/home_remote_datasource.dart';
 import 'features/home/presentation/bloc/home_bloc.dart';
 import 'features/main/splash_page.dart';
+import 'features/presence/data/datasource/presence_remote_datasource.dart';
+import 'features/presence/presentation/bloc/presence/presence_bloc.dart';
+import 'features/presence/presentation/bloc/presence_history/presence_history_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,6 +24,7 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider(create: (context) => AuthRemoteDatasource()),
         RepositoryProvider(create: (context) => HomeRemoteDatasource()),
+        RepositoryProvider(create: (context) => PresenceRemoteDatasource()),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -29,6 +33,14 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => HomeBloc(context.read<HomeRemoteDatasource>()),
+          ),
+          BlocProvider(
+            create: (context) =>
+                PresenceBloc(context.read<PresenceRemoteDatasource>()),
+          ),
+          BlocProvider(
+            create: (context) =>
+                PresenceHistoryBloc(context.read<PresenceRemoteDatasource>()),
           ),
         ],
         child: MaterialApp(

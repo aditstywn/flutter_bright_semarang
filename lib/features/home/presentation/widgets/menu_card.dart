@@ -5,13 +5,13 @@ import '../../../../core/style/color/colors_app.dart';
 class MenuCard extends StatelessWidget {
   final VoidCallback onLeaveRequestTap;
   final VoidCallback onMyTasksTap;
-  final VoidCallback onAttendanceHistoryTap;
+  final VoidCallback onPresenceHistoryTap;
 
   const MenuCard({
     super.key,
     required this.onLeaveRequestTap,
     required this.onMyTasksTap,
-    required this.onAttendanceHistoryTap,
+    required this.onPresenceHistoryTap,
   });
 
   @override
@@ -50,7 +50,7 @@ class MenuCard extends StatelessWidget {
               child: _MenuTile(
                 icon: Icons.history_rounded,
                 label: 'Riwayat Presensi',
-                onTap: onAttendanceHistoryTap,
+                onTap: onPresenceHistoryTap,
               ),
             ),
           ],
