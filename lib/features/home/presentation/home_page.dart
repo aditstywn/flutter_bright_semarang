@@ -12,6 +12,7 @@ import '../../../core/style/color/colors_app.dart';
 import '../../auth/data/datasource/auth_local_datasource.dart';
 import '../../auth/data/models/response/login_response_model.dart';
 import '../../auth/presentation/pages/login_page.dart';
+import '../../leaves/presentation/pages/leaves_page.dart';
 import '../../presence/presentation/pages/camera_page.dart';
 import '../../presence/presentation/pages/history_presence_page.dart';
 import 'bloc/home_bloc.dart';
@@ -267,8 +268,9 @@ class _HomePageState extends State<HomePage> {
 
                               // Menu
                               MenuCard(
-                                onLeaveRequestTap: () =>
-                                    _showFeedback('Membuka Pengajuan Izin'),
+                                onLeaveRequestTap: () {
+                                  context.push(const LeavesPage());
+                                },
                                 onMyTasksTap: () =>
                                     _showFeedback('Membuka Tugas Saya'),
                                 onPresenceHistoryTap: () {
