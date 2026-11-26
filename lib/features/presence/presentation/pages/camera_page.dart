@@ -507,7 +507,7 @@ class _CameraPageState extends State<CameraPage> {
                       borderRadius: 4,
                       label: 'Lanjutkan',
                       onPressed: () {
-                        context.push(
+                        context.pushReplacement(
                           FormPresencePage(
                             imageFile: imageFile,
                             type: widget.type,

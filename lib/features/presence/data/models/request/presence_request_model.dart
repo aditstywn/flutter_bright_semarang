@@ -13,9 +13,9 @@ class PresenceRequestModel {
     this.keterangan,
   });
 
-  Map<String, dynamic> toMap() => {
-    "latitude": latitude,
-    "longitude": longitude,
-    "keterangan": keterangan,
+  Map<String, String> toMap() => {
+    "latitude": latitude.toString(),
+    "longitude": longitude.toString(),
+    "keterangan": keterangan ?? '',
   };
 }

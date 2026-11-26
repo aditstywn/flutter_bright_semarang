@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../../core/config/api_driver.dart';
 import '../../../../core/config/handle_response.dart';
@@ -17,7 +18,15 @@ class PresenceRemoteDatasource {
       final response = await _driver.request(
         method: ApiMethod.post,
         url: '/attendance/checkin',
-        body: request.toMap(),
+        fields: request.toMap(),
+        files: request.fotoBase64 != null
+            ? [
+                await http.MultipartFile.fromPath(
+                  'foto',
+                  request.fotoBase64!.path,
+                ),
+              ]
+            : [],
         isMultipart: true,
       );
 
@@ -38,7 +47,15 @@ class PresenceRemoteDatasource {
       final response = await _driver.request(
         method: ApiMethod.post,
         url: '/attendance/checkout',
-        body: request.toMap(),
+        fields: request.toMap(),
+        files: request.fotoBase64 != null
+            ? [
+                await http.MultipartFile.fromPath(
+                  'foto',
+                  request.fotoBase64!.path,
+                ),
+              ]
+            : [],
         isMultipart: true,
       );
 
@@ -68,10 +85,7 @@ class PresenceRemoteDatasource {
         queryParameters: queryParams.isEmpty ? null : queryParams,
       ).toString();
 
-      final response = await _driver.request(
-        method: ApiMethod.get,
-        url: url,
-      );
+      final response = await _driver.request(method: ApiMethod.get, url: url);
 
       return handleResponse(
         response: response,
