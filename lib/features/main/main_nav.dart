@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../core/style/color/colors_app.dart';
 import '../home/presentation/home_page.dart';
+import '../profile/presentation/pages/profile_page.dart';
 
 class MainNav extends StatefulWidget {
   final String? appVersion;
@@ -14,16 +15,7 @@ class MainNav extends StatefulWidget {
 class _MainNavState extends State<MainNav> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const HomePage(),
-
-    const Center(
-      child: Text(
-        'Profile',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    ),
-  ];
+  final List<Widget> _pages = [const HomePage(), const ProfilePage()];
 
   void _onItemTapped(int index) {
     _selectedIndex = index;
