@@ -1,14 +1,78 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../../core/extensions/build_context_ext.dart';
 import '../../../../core/style/color/colors_app.dart';
-import '../../../auth/data/models/response/login_response_model.dart';
+import '../../../auth/data/datasource/auth_local_datasource.dart';
+import '../../../auth/presentation/pages/login_page.dart';
+import '../../../profile/data/models/response/profile_response_model.dart';
+import '../../../profile/presentation/widgets/profile_header_card.dart';
 
-class DashboardHeader extends StatelessWidget {
-  final User? user;
+class DashboardHeader extends StatefulWidget {
+  final Profile? user;
   final VoidCallback? onLogoutTap;
 
   const DashboardHeader({super.key, this.user, this.onLogoutTap});
+
+  @override
+  State<DashboardHeader> createState() => _DashboardHeaderState();
+}
+
+class _DashboardHeaderState extends State<DashboardHeader> {
+  String _getInitials(String? name) {
+    final trimmed = name?.trim() ?? '';
+    if (trimmed.isEmpty) return '?';
+    final parts = trimmed.split(RegExp(r'\s+'));
+    if (parts.length >= 2) {
+      return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+    }
+    return trimmed.length >= 2
+        ? trimmed.substring(0, 2).toUpperCase()
+        : trimmed[0].toUpperCase();
+  }
+
+  Future<void> confirmLogout() async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: ColorsApp.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text(
+          'Keluar dari Akun',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+        content: const Text(
+          'Apakah Anda yakin ingin keluar dari aplikasi?',
+          style: TextStyle(fontSize: 13.5, color: ColorsApp.gray600),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text(
+              'Batal',
+              style: TextStyle(color: ColorsApp.gray600),
+            ),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: ColorsApp.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Keluar'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      await AuthLocalDatasource().clearAllData();
+      if (!mounted) return;
+      context.pushAndRemoveUntil(const LoginPage(), (route) => false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +89,7 @@ class DashboardHeader extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: CachedNetworkImage(
-              imageUrl: user?.fotoUrl ?? '',
+              imageUrl: widget.user?.fotoUrl ?? '',
               imageBuilder: (context, imageProvider) => Container(
                 width: 48,
                 height: 48,
@@ -36,18 +100,10 @@ class DashboardHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Text(
-                user?.nama != null && user!.nama!.isNotEmpty
-                    ? user!.nama![0].toUpperCase()
-                    : '-',
-                style: const TextStyle(
-                  color: ColorsApp.primary,
-                  fontSize: 30,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.5,
-                ),
-              ),
+              placeholder: (_, _) =>
+                  AvatarFallback(initials: _getInitials(widget.user?.nama)),
+              errorWidget: (_, _, _) =>
+                  AvatarFallback(initials: _getInitials(widget.user?.nama)),
             ),
           ),
         ),
@@ -57,7 +113,7 @@ class DashboardHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                user?.nama ?? '-',
+                widget.user?.nama ?? '-',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -70,7 +126,7 @@ class DashboardHeader extends StatelessWidget {
               const SizedBox(height: 2),
 
               Text(
-                user?.universitas ?? '-',
+                widget.user?.academic?.universitas ?? '-',
                 style: TextStyle(
                   fontSize: 12.5,
                   color: ColorsApp.white.withAlpha(220),
@@ -84,7 +140,7 @@ class DashboardHeader extends StatelessWidget {
           color: ColorsApp.white.withAlpha(42),
           borderRadius: BorderRadius.circular(12),
           child: InkWell(
-            onTap: onLogoutTap,
+            onTap: confirmLogout,
             borderRadius: BorderRadius.circular(12),
             child: Container(
               width: 42,

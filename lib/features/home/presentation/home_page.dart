@@ -10,11 +10,11 @@ import '../../../core/extensions/build_context_ext.dart';
 import '../../../core/services/location_service.dart';
 import '../../../core/style/color/colors_app.dart';
 import '../../auth/data/datasource/auth_local_datasource.dart';
-import '../../auth/data/models/response/login_response_model.dart';
 import '../../auth/presentation/pages/login_page.dart';
 import '../../leaves/presentation/pages/leaves_page.dart';
 import '../../presence/presentation/pages/camera_page.dart';
 import '../../presence/presentation/pages/history_presence_page.dart';
+import '../../profile/presentation/bloc/profile/profile_bloc.dart';
 import 'bloc/home_bloc.dart';
 import 'widgets/attendance_trend_card.dart';
 import 'widgets/daily_attendance_card.dart';
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadData() async {
     context.read<HomeBloc>().add(const HomeEvent.getDashboard());
-    _getUserData();
+    context.read<ProfileBloc>().add(const ProfileEvent.getProfile());
   }
 
   void _showFeedback(String message) {
@@ -53,16 +53,6 @@ class _HomePageState extends State<HomePage> {
           duration: const Duration(seconds: 2),
         ),
       );
-  }
-
-  User? user;
-  Future<void> _getUserData() async {
-    final user = await AuthLocalDatasource().getUser();
-    if (user != null) {
-      setState(() {
-        this.user = user;
-      });
-    }
   }
 
   List<CameraDescription>? cameras;
@@ -214,14 +204,33 @@ class _HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               //  Header
-                              DashboardHeader(
-                                user: user,
-                                onLogoutTap: () {
-                                  context.pushAndRemoveUntil(
-                                    LoginPage(),
-                                    (route) => false,
-                                  );
-                                  AuthLocalDatasource().clearAllData();
+                              BlocBuilder<ProfileBloc, ProfileState>(
+                                builder: (context, state) {
+                                  switch (state) {
+                                    case LoadingProfile():
+                                      return const SizedBox.shrink();
+                                    case ErrorProfile(:final message):
+                                      return Text(
+                                        message,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: ColorsApp.gray700,
+                                        ),
+                                      );
+                                    case ProfileSuccess(:final profile):
+                                      return DashboardHeader(
+                                        user: profile.data,
+                                        onLogoutTap: () {
+                                          context.pushAndRemoveUntil(
+                                            LoginPage(),
+                                            (route) => false,
+                                          );
+                                          AuthLocalDatasource().clearAllData();
+                                        },
+                                      );
+                                    case _:
+                                      return const SizedBox.shrink();
+                                  }
                                 },
                               ),
                               const SizedBox(height: 18),

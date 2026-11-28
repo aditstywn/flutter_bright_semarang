@@ -1,16 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bright_semarang/core/extensions/build_context_ext.dart';
 import 'package:material_ui/material_ui.dart';
-
-import '../../../../core/component/custom_textformfield.dart';
 
 import '../../../../core/component/buttons.dart';
 import '../../../../core/component/custom_container.dart';
+import '../../../../core/component/custom_textformfield.dart';
+import '../../../../core/extensions/build_context_ext.dart';
 import '../../../../core/style/color/colors_app.dart';
 import '../../../main/main_nav.dart';
 import '../../data/datasource/auth_local_datasource.dart';
 import '../../data/models/request/login_request_model.dart';
-import '../../data/models/response/login_response_model.dart';
 import '../bloc/auth_bloc.dart';
 import 'register_page.dart';
 
@@ -152,9 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                             AuthLocalDatasource().saveAccessToken(
                               login.data?.token ?? '',
                             );
-                            AuthLocalDatasource().saveUser(
-                              login.data?.user ?? User(),
-                            );
+
                             context.pushReplacement(MainNav());
                             _emailController.clear();
                             _passwordController.clear();
